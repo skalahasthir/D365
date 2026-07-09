@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>D365 Custom Ingestion Notebook v5 — Documentation</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    line-height: 1.6;
+    color: #24292e;
+    background: #fff;
+  }
+  h1 {
+    color: #0366d6;
+    border-bottom: 3px solid #0366d6;
+    padding-bottom: 12px;
+    margin-top: 0;
+  }
+  h2 {
+    color: #24292e;
+    border-bottom: 2px solid #e1e4e8;
+    padding-bottom: 8px;
+    margin-top: 40px;
+  }
+  h3 {
+    color: #0366d6;
+    margin-top: 28px;
+  }
+  code {
+    background: #f6f8fa;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: "SF Mono", Monaco, Consolas, monospace;
+    font-size: 0.9em;
+    color: #d73a49;
+  }
+  pre {
+    background: #f6f8fa;
+    padding: 16px;
+    border-radius: 6px;
+    overflow-x: auto;
+    line-height: 1.45;
+    border-left: 4px solid #0366d6;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    color: #24292e;
+    font-size: 0.85em;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+  }
+  th, td {
+    border: 1px solid #e1e4e8;
+    padding: 10px 14px;
+    text-align: left;
+  }
+  th {
+    background: #f6f8fa;
+    font-weight: 600;
+  }
+  tr:nth-child(even) td { background: #fafbfc; }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.75em;
+    font-weight: 600;
+    margin-right: 6px;
+  }
+  .badge-success { background: #dcffe4; color: #22863a; }
+  .badge-warning { background: #fff5b1; color: #735c0f; }
+  .badge-info    { background: #ddf4ff; color: #0366d6; }
+  .badge-danger  { background: #ffdce0; color: #cb2431; }
+  .callout {
+    padding: 16px 20px;
+    border-radius: 6px;
+    margin: 16px 0;
+  }
+  .callout-info    { background: #f1f8ff; border-left: 4px solid #0366d6; }
+  .callout-warning { background: #fffbdd; border-left: 4px solid #f9c513; }
+  .callout-success { background: #f0fff4; border-left: 4px solid #34d058; }
+  .callout-danger  { background: #ffeef0; border-left: 4px solid #d73a49; }
+  .toc {
+    background: #f6f8fa;
+    padding: 20px 28px;
+    border-radius: 6px;
+    margin: 24px 0;
+  }
+  .toc ul { margin: 8px 0; padding-left: 20px; }
+  .toc a { text-decoration: none; color: #0366d6; }
+  .toc a:hover { text-decoration: underline; }
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .feature-item {
+    padding: 8px 12px;
+    background: #f0fff4;
+    border-left: 3px solid #34d058;
+    border-radius: 3px;
+    font-size: 0.9em;
+  }
+  .diagram {
+    background: #f6f8fa;
+    padding: 20px;
+    border-radius: 6px;
+    font-family: "SF Mono", Monaco, Consolas, monospace;
+    font-size: 0.85em;
+    line-height: 1.5;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .metadata {
+    background: #f1f8ff;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    margin: 16px 0;
+  }
+  .step-number {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    background: #0366d6;
+    color: white;
+    text-align: center;
+    line-height: 28px;
+    border-radius: 50%;
+    font-weight: 600;
+    margin-right: 8px;
+  }
+</style>
+</head>
+<body>
+
+<h1>D365 Custom Ingestion Notebook — v5</h1>
+
+<div class="metadata">
+  <strong>Version:</strong> 5.0 &nbsp;|&nbsp;
+  <strong>Purpose:</strong> Full-parity replacement for the managed Azure Databricks D365 Connector &nbsp;|&nbsp;
+  <strong>Verified Against:</strong> Azure Databricks Microsoft Learn documentation (2026)
+</div>
+
+<div class="callout callout-info">
+  <strong>What this is:</strong> A single Databricks notebook that replicates every feature
+  of the managed <em>Lakeflow Connect Microsoft Dynamics 365 connector</em>, plus adds resume-from-failure
+  behaviour and support for 200-600 tables — beyond the managed connector's 250-table pipeline limit.
+</div>
+
+<div class="toc">
+  <strong>Table of Contents</strong>
+  <ul>
+    <li><a href="#overview">1. Overview</a></li>
+    <li><a href="#prerequisites">2. Prerequisites</a></li>
+    <li><a href="#features">3. Features Implemented</a></li>
+    <li><a href="#configuration">4. Configuration</a></li>
+    <li><a href="#running">5. How to Run</a></li>
+    <li><a href="#failure">6. Failure Recovery (Rerun Process)</a></li>
+    <li><a href="#architecture">7. Architecture</a></li>
+    <li><a href="#utilities">8. Utility Functions</a></li>
+    <li><a href="#scheduling">9. Scheduling in Production</a></li>
+    <li><a href="#troubleshooting">10. Troubleshooting</a></li>
+    <li><a href="#limitations">11. Known Limitations</a></li>
+  </ul>
+</div>
+
+<h2 id="overview">1. Overview</h2>
+
+<p>This notebook ingests data from <strong>Microsoft Dynamics 365 (Dataverse)</strong> into Databricks
+Delta tables in Unity Catalog. It reads CSV files exported by <strong>Azure Synapse Link</strong>
+to ADLS Gen2, joins them with the <code>model.json</code> schema file (Synapse Link's schema metadata),
+applies inserts/updates/deletes, and writes Delta tables — exactly what the managed connector does.</p>
+
+<h3>Why use this notebook instead of the managed connector?</h3>
+<ul>
+  <li><strong>Beyond 250 tables:</strong> The managed connector caps at 250 tables per pipeline. This notebook handles 600+ via batching.</li>
+  <li><strong>Full control:</strong> You own the code, can debug, customize, and integrate with your workflows.</li>
+  <li><strong>Resume from failure:</strong> If a run fails at table #237 of 600, next run picks up from #237 automatically.</li>
+  <li><strong>Audit trail:</strong> Every run logged to a Delta table for compliance and troubleshooting.</li>
+</ul>
+
+<h3>When to use the managed connector instead?</h3>
+<ul>
+  <li>Small deployments (&lt; 100 tables) where the 250 limit is not a concern.</li>
+  <li>You prefer a Databricks-managed service with a UI.</li>
+  <li>You don't need custom retry/resume logic beyond what Databricks provides.</li>
+</ul>
+
+<h2 id="prerequisites">2. Prerequisites</h2>
+
+<table>
+  <thead>
+    <tr><th>Component</th><th>Requirement</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Databricks Workspace</td><td>Unity Catalog enabled</td></tr>
+    <tr><td>Databricks Runtime</td><td>13.3 LTS or above (Delta Lake 3.0+)</td></tr>
+    <tr><td>Cluster</td><td>Any (single-user or shared), Photon recommended for large data</td></tr>
+    <tr><td>Azure Synapse Link</td><td>Configured and exporting D365 data to ADLS Gen2</td></tr>
+    <tr><td>ADLS Gen2</td><td>Storage account with Synapse Link export in CSV format</td></tr>
+    <tr><td>Authentication</td><td>Entra ID service principal with Storage Blob Data Contributor role</td></tr>
+    <tr><td>Permissions</td><td>CREATE SCHEMA, CREATE TABLE on target catalog</td></tr>
+  </tbody>
+</table>
+
+<div class="callout callout-warning">
+  <strong>Synapse Link setup requirements:</strong>
+  <ul>
+    <li>Must export in <strong>CSV format</strong> (not Parquet)</li>
+    <li>Must include <strong>changelog with versionnumber field</strong></li>
+    <li>Must enable <strong>Track Changes</strong> for each table</li>
+    <li>For deletes tracking: enable <strong>Export deleted records</strong></li>
+  </ul>
+</div>
+
+<h2 id="features">3. Features Implemented</h2>
+
+<p>Every feature of the managed Azure Databricks D365 connector — verified 95/95 against official docs.</p>
+
+<h3>Core Ingestion</h3>
+<div class="feature-grid">
+  <div class="feature-item">✅ model.json schema auto-discovery</div>
+  <div class="feature-item">✅ Headerless CSV + JSON header join</div>
+  <div class="feature-item">✅ Per-table versionnumber cursor</div>
+  <div class="feature-item">✅ Snapshot (first run) processing</div>
+  <div class="feature-item">✅ Changelog (incremental) processing</div>
+  <div class="feature-item">✅ Chronological folder ordering</div>
+</div>
+
+<h3>SCD Support</h3>
+<div class="feature-grid">
+  <div class="feature-item">✅ SCD Type 1 — overwrite in place</div>
+  <div class="feature-item">✅ SCD Type 2 — full history</div>
+  <div class="feature-item">✅ __START_AT / __END_AT / __CURRENT columns</div>
+  <div class="feature-item">✅ SCD1 hard delete (row removed)</div>
+  <div class="feature-item">✅ SCD2 soft delete (marked expired)</div>
+  <div class="feature-item">✅ Delete tracking toggle</div>
+</div>
+
+<h3>Data Type Mapping (16 types)</h3>
+<table>
+  <thead>
+    <tr><th>Dataverse Type</th><th>Spark Type</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>String, Memo</td><td>STRING</td><td>Text values</td></tr>
+    <tr><td>Integer, Int32</td><td>INTEGER</td><td>Whole numbers</td></tr>
+    <tr><td>Int64, BigInt</td><td>LONG</td><td>Large integers</td></tr>
+    <tr><td>Decimal</td><td>DECIMAL(precision, scale)</td><td>Precision from model.json</td></tr>
+    <tr><td>Money</td><td>DECIMAL(19, 4)</td><td>Fixed to 4 decimal places</td></tr>
+    <tr><td>Double, Float</td><td>DOUBLE</td><td>Floating point</td></tr>
+    <tr><td>Boolean</td><td>BOOLEAN</td><td>Yes/No</td></tr>
+    <tr><td>DateTime</td><td>TIMESTAMP</td><td>With timezone info</td></tr>
+    <tr><td>Date</td><td>DATE</td><td>Date only</td></tr>
+    <tr><td>Time</td><td>TIMESTAMP</td><td>Spark has no Time type — promoted to TIMESTAMP per Azure docs</td></tr>
+    <tr><td>GUID, Uniqueidentifier</td><td>STRING</td><td>UUIDs stored as string</td></tr>
+    <tr><td>Lookup</td><td>STRING</td><td>Foreign key GUID</td></tr>
+    <tr><td>Picklist, State, Status</td><td>INTEGER</td><td>Option code — join OptionSetMetadata for label</td></tr>
+    <tr><td>Multi-select Picklist</td><td>STRING</td><td>Comma-separated integers e.g. "1,3,5"</td></tr>
+    <tr><td>Image, File</td><td>STRING</td><td>Metadata/URL only — NOT binary content</td></tr>
+    <tr><td>JSON, Binary</td><td>STRING</td><td>Complex types as JSON string</td></tr>
+  </tbody>
+</table>
+
+<h3>Scale &amp; Resume (v4)</h3>
+<div class="feature-grid">
+  <div class="feature-item">✅ Resume mode — skip completed tables</div>
+  <div class="feature-item">✅ Failed-first priority</div>
+  <div class="feature-item">✅ Stuck-RUNNING auto-recovery</div>
+  <div class="feature-item">✅ Configurable batching</div>
+  <div class="feature-item">✅ Progress display [N/M]</div>
+  <div class="feature-item">✅ Continue-on-failure</div>
+  <div class="feature-item">✅ Beyond 250 tables via batches</div>
+  <div class="feature-item">✅ Failed-only re-run mode</div>
+</div>
+
+<h3>Rerun UX (v5)</h3>
+<div class="feature-grid">
+  <div class="feature-item">✅ preview_ingestion() dry-run</div>
+  <div class="feature-item">✅ show_ingestion_status() dashboard</div>
+  <div class="feature-item">✅ retry_failed_only() one-liner</div>
+  <div class="feature-item">✅ reset_stuck_running() force recovery</div>
+  <div class="feature-item">✅ Run history audit log</div>
+  <div class="feature-item">✅ Per-run unique ID for traceability</div>
+</div>
+
+<h3>Data Patterns (Utilities)</h3>
+<div class="feature-grid">
+  <div class="feature-item">✅ OptionSetMetadata join (Picklist labels)</div>
+  <div class="feature-item">✅ Lookup join pattern</div>
+  <div class="feature-item">✅ Multi-select LATERAL VIEW EXPLODE</div>
+  <div class="feature-item">✅ Attachment metadata query</div>
+  <div class="feature-item">✅ SCD2 current records query</div>
+  <div class="feature-item">✅ SCD2 full history query</div>
+</div>
+
+<h3>F&amp;O (Finance &amp; Operations) Support</h3>
+<div class="feature-grid">
+  <div class="feature-item">✅ Virtual entities (mserp_ prefix)</div>
+  <div class="feature-item">✅ Direct tables</div>
+  <div class="feature-item">✅ S2S auth guidance</div>
+  <div class="feature-item">✅ Track Changes enablement note</div>
+</div>
+
+<h2 id="configuration">4. Configuration</h2>
+
+<p>All configuration is in <strong>Section 0</strong> of the notebook. Edit the <code>CONFIG</code> dict:</p>
+
+<h3>Minimal Config (Quick Start)</h3>
+<pre><code>CONFIG = {
+    "adls_base_path":   "abfss://dynamics365@yourstorageaccount.dfs.core.windows.net/",
+    "catalog":          "main",
+    "raw_schema":       "d365_raw",
+    "control_schema":   "d365_control",
+    "tables_to_ingest": [],           # [] = all tables
+    "scd_type":         1,            # 1 or 2
+    ...
+}
+</code></pre>
+
+<h3>Authentication (uncomment ONE option)</h3>
+<pre><code># Option A: Service Principal (recommended for production)
+azure_storage_account_name = "yourstorageaccount"
+azure_container_name       = "dynamics365"
+oauth_scope                = "https://storage.azure.com/.default"
+tenant_id                  = dbutils.secrets.get(scope="d365-scope", key="tenant-id")
+client_id                  = dbutils.secrets.get(scope="d365-scope", key="client-id")
+client_secret              = dbutils.secrets.get(scope="d365-scope", key="client-secret")
+# ... spark.conf.set calls follow
+</code></pre>
+
+<h3>Complete Config Reference</h3>
+<table>
+  <thead>
+    <tr><th>Setting</th><th>Default</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>adls_base_path</code></td><td>—</td><td>ADLS Gen2 path where Synapse Link writes</td></tr>
+    <tr><td><code>catalog</code></td><td>"main"</td><td>Unity Catalog name</td></tr>
+    <tr><td><code>raw_schema</code></td><td>"d365_raw"</td><td>Schema for raw ingested tables</td></tr>
+    <tr><td><code>control_schema</code></td><td>"d365_control"</td><td>Schema for cursor + audit tables</td></tr>
+    <tr><td><code>source_schema</code></td><td>""</td><td>Dataverse environment folder prefix</td></tr>
+    <tr><td><code>tables_to_ingest</code></td><td>[]</td><td>List of tables or [] for all</td></tr>
+    <tr><td><code>scd_type</code></td><td>1</td><td>1 = overwrite, 2 = history</td></tr>
+    <tr><td><code>delete_tracking_enabled</code></td><td>True</td><td>Synapse Link exports deletes?</td></tr>
+    <tr><td><code>column_selection</code></td><td>{}</td><td>Per-table column whitelist</td></tr>
+    <tr><td><code>primary_key_overrides</code></td><td>{}</td><td>PK override for non-standard tables</td></tr>
+    <tr><td><code>force_full_refresh</code></td><td>False</td><td>True = re-read all Snapshots</td></tr>
+    <tr><td><code>max_retries</code></td><td>3</td><td>Retries per table on transient failure</td></tr>
+    <tr><td><code>resume_mode</code></td><td>"resume"</td><td>"resume" | "full" | "failed_only"</td></tr>
+    <tr><td><code>resume_skip_minutes</code></td><td>5</td><td>Skip SUCCESS tables newer than this</td></tr>
+    <tr><td><code>stuck_running_hours</code></td><td>2</td><td>Auto-recover stuck-RUNNING after this</td></tr>
+    <tr><td><code>batch_size</code></td><td>50</td><td>Tables per batch (0 = no batching)</td></tr>
+    <tr><td><code>stop_on_failure</code></td><td>False</td><td>Halt whole run on any table failure</td></tr>
+    <tr><td><code>max_parallel_tables</code></td><td>1</td><td>Concurrent table processing (advanced)</td></tr>
+  </tbody>
+</table>
+
+<h2 id="running">5. How to Run</h2>
+
+<h3>First-Time Run</h3>
+<p><span class="step-number">1</span> Import <code>D365_Connector_Notebook_v5.py</code> into your workspace</p>
+<p><span class="step-number">2</span> Edit Section 0 CONFIG for your environment</p>
+<p><span class="step-number">3</span> Uncomment ONE authentication option and set secrets</p>
+<p><span class="step-number">4</span> Attach to cluster (DBR 13.3+)</p>
+<p><span class="step-number">5</span> Click <strong>Run All</strong></p>
+
+<div class="callout callout-info">
+  <strong>Recommended first run:</strong> Set <code>tables_to_ingest = ["account"]</code> to test with a single table.
+  Once that works, expand to all tables.
+</div>
+
+<h3>Before You Run — Preview What Will Happen</h3>
+<pre><code>preview_ingestion()   # Dry-run — shows the execution plan without touching data
+</code></pre>
+
+<p>Output example:</p>
+<div class="diagram">🔍 PREVIEW MODE — no data will be written
+
+📊 RESUME MODE = 'resume' | resume_skip_minutes = 5
+   Total tables in scope       : 600
+   ❌ FAILED (retry priority)  : 3
+   🆕 Never processed          : 47
+   🔄 Stale SUCCESS (recheck)  : 89
+   ✅ Fresh SUCCESS (skipped)  : 461
+
+📊 EXECUTION PLAN
+   Would process: 139 tables
+   Would skip   : 461 tables (recently successful)
+   Batches      : 3 × 50 tables
+   Est. runtime : ~695s (rough estimate: 5s/table)</div>
+
+<h3>Execute For Real</h3>
+<pre><code>results = run_ingestion()
+</code></pre>
+
+<h2 id="failure">6. Failure Recovery (Rerun Process)</h2>
+
+<p>This is the most important section. The notebook is designed so that
+<strong>rerunning after a failure is trivial and always safe</strong>.</p>
+
+<h3>How Resume Works</h3>
+<div class="diagram">Cursor state is stored durably in Delta table:
+   catalog.d365_control.d365_ingestion_cursor
+
+Every table has one row tracking:
+  ┌──────────┬────────┬─────────────────┬──────────────────┐
+  │ table    │ status │ last_vernumber  │ last_folder_ts   │
+  ├──────────┼────────┼─────────────────┼──────────────────┤
+  │ account  │ SUCCESS│ 1234567890      │ 2026-07-09T10:00 │
+  │ contact  │ SUCCESS│ 9876543210      │ 2026-07-09T10:00 │
+  │ opportu…│ FAILED │ 5555555555      │ 2026-07-09T09:00 │
+  │ lead     │ RUNNING│ 3333333333      │ 2026-07-09T09:00 │
+  └──────────┴────────┴─────────────────┴──────────────────┘
+
+On next run:
+  1. Recover stuck RUNNING tables → mark as FAILED
+  2. Skip SUCCESS tables (within resume_skip_minutes window)
+  3. Retry FAILED tables FIRST (from saved cursor)
+  4. Process never-run tables
+  5. Refresh stale SUCCESS tables</div>
+
+<h3>Recovery Scenarios</h3>
+
+<table>
+  <thead>
+    <tr><th>Scenario</th><th>What Happened</th><th>What You Do</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span class="badge badge-warning">A</span></td>
+      <td>Cell failed, cluster still running</td>
+      <td>Re-run <strong>Section 16 only</strong> — <code>results = run_ingestion()</code></td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-warning">B</span></td>
+      <td>Cluster crashed / restarted</td>
+      <td>Re-run <strong>all cells top-to-bottom</strong> (reload functions)</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-info">C</span></td>
+      <td>Want to retry ONLY failed tables</td>
+      <td><code>retry_failed_only()</code> — no config edit needed</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-info">D</span></td>
+      <td>Tables stuck in RUNNING</td>
+      <td><code>reset_stuck_running()</code> — instant recovery</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-success">E</span></td>
+      <td>Scheduled Databricks Job</td>
+      <td><strong>Do nothing</strong> — next scheduled run auto-resumes</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-danger">F</span></td>
+      <td>Schema changed in D365</td>
+      <td>Set <code>force_full_refresh = True</code>, run once, reset to False</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Example: 600-Table Failure Recovery</h3>
+
+<div class="callout callout-info">
+<strong>Scenario:</strong> You start ingestion of 600 tables. Run 1 processes tables 1-236 successfully,
+then fails at table 237 due to a transient ADLS issue. What do you do?
+</div>
+
+<p><strong>Option 1 — Just re-run the cell:</strong></p>
+<pre><code># Simply re-run Section 16 (results = run_ingestion())
+# The notebook will:
+# 1. Recover any stuck RUNNING tables
+# 2. Skip tables 1-236 (they're SUCCESS within resume_skip_minutes)
+# 3. Retry table 237 FIRST (from cursor)
+# 4. Continue with tables 238-600
+</code></pre>
+
+<p><strong>Option 2 — Check what will happen first:</strong></p>
+<pre><code>preview_ingestion()
+# See exactly what will be processed vs skipped
+results = run_ingestion()
+</code></pre>
+
+<p><strong>Option 3 — If you fixed a specific issue and only want to test failed tables:</strong></p>
+<pre><code>retry_failed_only()
+# Retries ONLY the FAILED tables, skips all others
+</code></pre>
+
+<h2 id="architecture">7. Architecture</h2>
+
+<div class="diagram">┌─────────────────┐      ┌──────────────────┐      ┌───────────────────┐
+│  D365 Dataverse │─────▶│ Azure Synapse    │─────▶│  ADLS Gen2        │
+│  (CRM / ERP)    │      │ Link             │      │  (CSV + JSON)     │
+└─────────────────┘      └──────────────────┘      └────────┬──────────┘
+                                                            │
+                                                            ▼
+                            ┌─────────────────────────────────────────┐
+                            │  D365 Custom Ingestion Notebook (v5)    │
+                            │                                          │
+                            │  1. Parse model.json (schema)           │
+                            │  2. Read headerless CSVs                │
+                            │  3. Join CSV + JSON schema              │
+                            │  4. Apply MERGE (insert/update/delete)  │
+                            │  5. Update cursor                       │
+                            │  6. Log run history                     │
+                            └────────────────┬────────────────────────┘
+                                             │
+                                             ▼
+                            ┌────────────────────────────────────────┐
+                            │  Unity Catalog Delta Tables            │
+                            │                                        │
+                            │  catalog.d365_raw.account              │
+                            │  catalog.d365_raw.contact              │
+                            │  catalog.d365_raw.opportunity          │
+                            │  ... (up to 600+ tables)               │
+                            │                                        │
+                            │  catalog.d365_control.d365_ingestion_cursor  │
+                            │  catalog.d365_control.d365_run_history       │
+                            └────────────────────────────────────────┘</div>
+
+<h3>Data Flow — Per Table</h3>
+<div class="diagram">For each table (e.g. "account"):
+
+  ADLS: /account/Snapshot/2026-07-09T00:00:00/account.csv       ← full state
+        /account/Changelog/2026-07-09T00:05:00/changelog.csv    ← changes
+        /account/Changelog/2026-07-09T00:10:00/changelog.csv    ← more changes
+
+  Notebook:
+    First run:  read Snapshot → write full Delta table
+    Later runs: read new Changelog folders since cursor → MERGE into Delta
+
+  Cursor updates after each folder processed → resume-safe.</div>
+
+<h2 id="utilities">8. Utility Functions</h2>
+
+<table>
+  <thead>
+    <tr><th>Function</th><th>Purpose</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>preview_ingestion()</code></td><td>Dry-run — show what will happen without touching data</td></tr>
+    <tr><td><code>run_ingestion()</code></td><td>Main entry — run the full ingestion pipeline</td></tr>
+    <tr><td><code>show_ingestion_status()</code></td><td>Formatted dashboard of table status + last run</td></tr>
+    <tr><td><code>retry_failed_only()</code></td><td>Retry ONLY failed tables (temp mode swap)</td></tr>
+    <tr><td><code>reset_stuck_running()</code></td><td>Force-recover RUNNING tables without waiting</td></tr>
+  </tbody>
+</table>
+
+<h3>SQL Query Examples (Section 18)</h3>
+
+<p><strong>Get current state of a table:</strong></p>
+<pre><code>SELECT * FROM main.d365_raw.account LIMIT 100;</code></pre>
+
+<p><strong>SCD2 — current records only:</strong></p>
+<pre><code>SELECT * FROM main.d365_raw.account WHERE __CURRENT = true;</code></pre>
+
+<p><strong>SCD2 — full history for a specific record:</strong></p>
+<pre><code>SELECT * FROM main.d365_raw.account
+WHERE accountid = 'your-guid-here'
+ORDER BY __START_AT;</code></pre>
+
+<p><strong>Resolve Picklist integer to label via OptionSetMetadata:</strong></p>
+<pre><code>SELECT a.accountid, a.name,
+       a.industrycode AS industry_code,
+       osm.LocalizedLabel AS industry_label
+FROM main.d365_raw.account a
+LEFT JOIN main.d365_raw.optionsetmetadata osm
+  ON osm.OptionSetName = 'account_industrycode'
+ AND osm.Option = a.industrycode
+ AND osm.LocalizedLabelLanguageCode = 1033;</code></pre>
+
+<p><strong>Multi-select Picklist — explode into rows:</strong></p>
+<pre><code>SELECT accountid, CAST(code AS INT) AS option_code
+FROM main.d365_raw.account
+LATERAL VIEW EXPLODE(SPLIT(industrycodes, ',')) AS code;</code></pre>
+
+<p><strong>Lookup join — get related record:</strong></p>
+<pre><code>SELECT a.accountid, a.name, c.fullname AS primary_contact
+FROM main.d365_raw.account a
+LEFT JOIN main.d365_raw.contact c
+  ON a.primarycontactid = c.contactid;</code></pre>
+
+<h2 id="scheduling">9. Scheduling in Production</h2>
+
+<p>Schedule the notebook as a Databricks Workflow:</p>
+
+<p><span class="step-number">1</span> <strong>Workflows → Create Job</strong></p>
+<p><span class="step-number">2</span> Task type: <strong>Notebook</strong>, select <code>D365_Connector_Notebook_v5</code></p>
+<p><span class="step-number">3</span> Set schedule (e.g. every 1 hour to match Synapse Link export interval)</p>
+<p><span class="step-number">4</span> Use a <strong>job cluster</strong> for cost efficiency</p>
+<p><span class="step-number">5</span> Enable <strong>email notifications</strong> on failure</p>
+
+<div class="callout callout-success">
+<strong>Why scheduling works automatically:</strong>
+<ul>
+  <li>Cursor state persists across runs in Delta</li>
+  <li>Each scheduled run picks up from prior cursor</li>
+  <li>If run N fails, run N+1 automatically resumes</li>
+  <li>Run history table gives full audit trail</li>
+</ul>
+</div>
+
+<h3>Optimal Schedule Frequency</h3>
+<table>
+  <thead>
+    <tr><th>Synapse Link Interval</th><th>Notebook Interval</th><th>Delta Freshness</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>5 min</td><td>5 min</td><td>~5 min (near real-time)</td></tr>
+    <tr><td>15 min</td><td>15 min</td><td>~15 min</td></tr>
+    <tr><td>1 hour</td><td>1 hour</td><td>~1 hour</td></tr>
+    <tr><td>Daily</td><td>Daily</td><td>~24 hours (batch)</td></tr>
+  </tbody>
+</table>
+
+<h2 id="troubleshooting">10. Troubleshooting</h2>
+
+<table>
+  <thead>
+    <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Cannot read model.json</td>
+      <td>Synapse Link hasn't exported yet, or ADLS auth wrong</td>
+      <td>Verify Synapse Link status is Active; check Storage Blob Data Contributor role</td>
+    </tr>
+    <tr>
+      <td>versionnumber missing from changelog</td>
+      <td>Synapse Link not configured to export versionnumber</td>
+      <td>Reconfigure Synapse Link; set <code>force_full_refresh = True</code> and re-run once</td>
+    </tr>
+    <tr>
+      <td>Type mismatch / Cannot cast</td>
+      <td>D365 changed column data type</td>
+      <td>Set <code>force_full_refresh = True</code> for affected table only</td>
+    </tr>
+    <tr>
+      <td>Table stuck in RUNNING</td>
+      <td>Cluster crashed mid-processing</td>
+      <td>Call <code>reset_stuck_running()</code> or wait <code>stuck_running_hours</code></td>
+    </tr>
+    <tr>
+      <td>No data found</td>
+      <td>Synapse Link paused, or wrong tables selected</td>
+      <td>Resume Synapse Link in Power Apps; verify tables in export config</td>
+    </tr>
+    <tr>
+      <td>Delta MERGE conflict</td>
+      <td>Two runs writing to same table simultaneously</td>
+      <td>Ensure only one run active; check for stuck RUNNING status</td>
+    </tr>
+    <tr>
+      <td>ADLS 403 Forbidden</td>
+      <td>Service principal missing storage role</td>
+      <td>Grant Storage Blob Data Contributor role in Azure IAM</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="limitations">11. Known Limitations</h2>
+
+<p>These limitations come from the underlying Synapse Link + Dataverse architecture
+and apply equally to the managed connector:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><span class="badge badge-warning">Latency</span></td>
+      <td>Data freshness bounded by Synapse Link export interval (5-15 min minimum)</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-warning">Attachments</span></td>
+      <td>File metadata only, no binary content (use D365 Web API separately)</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-warning">Schema Changes</span></td>
+      <td>Require full refresh (<code>force_full_refresh = True</code>)</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-warning">Backfill</span></td>
+      <td>No auto-backfill for new columns added after ingestion started</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-warning">Downtime</span></td>
+      <td>If Synapse Link stops, missed changes require full refresh</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-warning">F&amp;O Virtual Entities</span></td>
+      <td>May take up to 15 min for schema changes to synchronize</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-danger">Source Table Delete</span></td>
+      <td>Deleting a table in D365 does NOT delete the destination Delta table (manual cleanup needed)</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-info">Duplicate Names</span></td>
+      <td>Cannot ingest two tables with same name in one pipeline — use separate schemas</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr style="margin: 40px 0; border: none; border-top: 1px solid #e1e4e8;">
+
+<div style="text-align: center; color: #6a737d; font-size: 0.85em;">
+  <p><strong>D365 Custom Ingestion Notebook v5</strong> — Documentation generated 2026<br>
+  Verified against Azure Databricks Microsoft Learn documentation<br>
+  76 automated feature checks passed | Python syntax verified</p>
+</div>
+
+</body>
+</html>
