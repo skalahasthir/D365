@@ -1,0 +1,2154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D365 F&amp;O Analytics — Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..900,0..100&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Ground */
+    --bg: #F8F6F0;
+    --bg-panel: #FFFFFF;
+    --bg-tint: #EFEAE0;
+    --bg-dark: #0F131C;
+    --bg-dark-2: #1A1F2C;
+
+    /* Ink */
+    --ink: #12141A;
+    --ink-2: #4A5265;
+    --ink-3: #7C8394;
+    --ink-inv: #F5F2EA;
+    --ink-inv-2: #A9AFBB;
+
+    /* Rules */
+    --rule: #D8D3C4;
+    --rule-strong: #B5AE9A;
+
+    /* Semantic — medallion layers */
+    --raw:      #8B5A2B;
+    --raw-bg:   #F3E7D0;
+    --silver:   #26548B;
+    --silver-bg:#DDE7F2;
+    --gold:     #0F6E56;
+    --gold-bg:  #D6EAE0;
+    --obt:      #8E1F3A;
+    --obt-bg:   #F3D9E1;
+    --critical: #B1201C;
+    --critical-bg: #F6D9D6;
+    --insight:  #4A3A6B;
+    --insight-bg: #E4DEEC;
+
+    /* Type scale */
+    --f-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+    --f-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --f-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--f-body);
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.6;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* ===================== TOP NAV ===================== */
+  .topnav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(248, 246, 240, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .topnav-inner {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+  }
+  .topnav-brand {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    font-family: var(--f-mono);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .topnav-brand .doc-id {
+    color: var(--ink-3);
+  }
+  .topnav-brand .doc-title {
+    color: var(--ink);
+  }
+  .topnav-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .topnav-links a {
+    color: var(--ink-2);
+    text-decoration: none;
+    padding: 6px 0;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .topnav-links a:hover {
+    color: var(--ink);
+    border-bottom-color: var(--ink);
+  }
+  @media (max-width: 780px) {
+    .topnav-links { display: none; }
+  }
+
+  /* ===================== HERO ===================== */
+  .hero {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 80px 32px 100px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 80px;
+    align-items: center;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-eyebrow {
+    font-family: var(--f-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--raw);
+    margin-bottom: 24px;
+  }
+  .hero-title {
+    font-family: var(--f-display);
+    font-size: clamp(44px, 5.5vw, 72px);
+    font-weight: 500;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 24px;
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+  }
+  .hero-title em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--raw);
+  }
+  .hero-sub {
+    font-family: var(--f-display);
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--ink-2);
+    max-width: 560px;
+    font-variation-settings: "opsz" 24;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 32px;
+    margin-top: 40px;
+    font-size: 13px;
+  }
+  .hero-meta-item {
+    border-left: 2px solid var(--raw);
+    padding-left: 12px;
+  }
+  .hero-meta-label {
+    display: block;
+    font-family: var(--f-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-3);
+    margin-bottom: 4px;
+  }
+  .hero-meta-value {
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .hero-stat {
+    text-align: right;
+  }
+  .hero-stat-num {
+    font-family: var(--f-display);
+    font-size: clamp(180px, 22vw, 320px);
+    font-weight: 300;
+    line-height: 0.85;
+    color: var(--raw);
+    letter-spacing: -0.05em;
+    font-variation-settings: "opsz" 144, "SOFT" 100;
+  }
+  .hero-stat-label {
+    font-family: var(--f-mono);
+    font-size: 13px;
+    color: var(--ink-2);
+    margin-top: 16px;
+    max-width: 340px;
+    margin-left: auto;
+    line-height: 1.4;
+  }
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; gap: 40px; padding: 60px 24px; }
+    .hero-stat { text-align: left; }
+    .hero-stat-label { margin-left: 0; }
+  }
+
+  /* ===================== CONTENT COLUMNS ===================== */
+  .content {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  .section {
+    padding: 80px 0;
+    border-bottom: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 60px;
+  }
+  .section-marker {
+    position: relative;
+  }
+  .section-marker-inner {
+    position: sticky;
+    top: 100px;
+  }
+  .section-num {
+    font-family: var(--f-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    color: var(--ink-3);
+    margin-bottom: 8px;
+  }
+  .section-kicker {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--raw);
+    margin-bottom: 12px;
+    padding-top: 12px;
+    border-top: 2px solid var(--raw);
+    display: inline-block;
+  }
+  .section-title {
+    font-family: var(--f-display);
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    margin-bottom: 24px;
+    font-variation-settings: "opsz" 60;
+  }
+  .section-title em {
+    font-style: italic;
+    font-weight: 400;
+  }
+  .section-lede {
+    font-family: var(--f-display);
+    font-size: 20px;
+    line-height: 1.5;
+    color: var(--ink-2);
+    margin-bottom: 40px;
+    font-variation-settings: "opsz" 24;
+    max-width: 720px;
+  }
+  .section p {
+    max-width: 720px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: var(--ink);
+    line-height: 1.65;
+  }
+  .section p.small {
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  @media (max-width: 900px) {
+    .section { grid-template-columns: 1fr; gap: 20px; padding: 50px 0; }
+    .section-marker-inner { position: static; }
+    .section-title { font-size: 32px; }
+  }
+
+  /* ===================== TYPOGRAPHY UTILITIES ===================== */
+  h3.h {
+    font-family: var(--f-display);
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 40px 0 16px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  h4.h {
+    font-family: var(--f-body);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 24px 0 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  code, .mono {
+    font-family: var(--f-mono);
+    font-size: 0.9em;
+    background: var(--bg-tint);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--ink);
+  }
+  strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* ===================== QUESTIONS BLOCK ===================== */
+  .questions {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 800px;
+  }
+  .q-item {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 28px;
+    padding: 32px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .q-item:last-child { border-bottom: 1px solid var(--rule); }
+  .q-num {
+    font-family: var(--f-display);
+    font-size: 44px;
+    font-weight: 400;
+    color: var(--raw);
+    line-height: 1;
+    font-variation-settings: "opsz" 60, "SOFT" 60;
+  }
+  .q-text {
+    font-family: var(--f-display);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-bottom: 8px;
+    font-variation-settings: "opsz" 30;
+  }
+  .q-answer {
+    font-size: 15px;
+    color: var(--ink-2);
+    line-height: 1.55;
+  }
+
+  /* ===================== TWO-COLUMN COMPARISON ===================== */
+  .compare-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 32px 0;
+  }
+  @media (max-width: 700px) { .compare-cols { grid-template-columns: 1fr; } }
+
+  .compare-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--rule);
+    padding: 28px;
+    border-radius: 4px;
+    position: relative;
+  }
+  .compare-card.raw {
+    border-left: 3px solid var(--raw);
+  }
+  .compare-card.silver {
+    border-left: 3px solid var(--silver);
+  }
+  .compare-eyebrow {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .compare-card.raw .compare-eyebrow { color: var(--raw); }
+  .compare-card.silver .compare-eyebrow { color: var(--silver); }
+  .compare-title {
+    font-family: var(--f-display);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+  .compare-list {
+    list-style: none;
+    padding: 0;
+  }
+  .compare-list li {
+    padding: 8px 0 8px 24px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-2);
+    border-bottom: 1px dashed var(--rule);
+  }
+  .compare-list li:last-child { border-bottom: none; }
+  .compare-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 16px;
+    width: 12px;
+    height: 1px;
+  }
+  .compare-card.raw .compare-list li::before { background: var(--raw); }
+  .compare-card.silver .compare-list li::before { background: var(--silver); }
+
+  /* ===================== SCRIPT CARDS ===================== */
+  .scripts {
+    margin: 32px 0;
+  }
+  .script-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+  .script-card:hover { border-color: var(--rule-strong); }
+  .script-card[open] { border-color: var(--ink-3); }
+
+  .script-summary {
+    display: grid;
+    grid-template-columns: 40px 1fr auto auto;
+    gap: 20px;
+    align-items: center;
+    padding: 18px 24px;
+    cursor: pointer;
+    list-style: none;
+    font-size: 15px;
+  }
+  .script-summary::-webkit-details-marker { display: none; }
+  .script-summary:hover { background: var(--bg-tint); }
+
+  .script-step {
+    font-family: var(--f-display);
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--raw);
+    line-height: 1;
+    text-align: center;
+    font-variation-settings: "opsz" 30;
+  }
+  .script-name {
+    font-family: var(--f-mono);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .script-role {
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .script-chevron {
+    color: var(--ink-3);
+    font-size: 18px;
+    line-height: 1;
+    transition: transform 0.2s;
+  }
+  .script-card[open] .script-chevron { transform: rotate(90deg); }
+
+  .script-body {
+    padding: 8px 24px 28px 84px;
+    border-top: 1px solid var(--rule);
+  }
+  .script-body dl {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 8px 20px;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .script-body dt {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding-top: 3px;
+  }
+  .script-body dd { color: var(--ink); line-height: 1.55; }
+  .script-body p { margin: 12px 0; }
+  .script-body .note {
+    background: var(--bg-tint);
+    border-left: 2px solid var(--raw);
+    padding: 12px 16px;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--ink);
+  }
+
+  @media (max-width: 700px) {
+    .script-summary { grid-template-columns: 32px 1fr auto; padding: 16px; gap: 12px; }
+    .script-role { display: none; }
+    .script-body { padding: 8px 16px 20px 60px; }
+    .script-body dl { grid-template-columns: 1fr; gap: 4px; }
+  }
+
+  /* ===================== CONNECTIVITY DIAGRAM ===================== */
+  .conn {
+    background: var(--bg-dark);
+    color: var(--ink-inv);
+    border-radius: 8px;
+    padding: 40px;
+    margin: 32px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .conn-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    align-items: stretch;
+  }
+  .conn-node {
+    padding: 20px;
+    border-radius: 6px;
+    background: var(--bg-dark-2);
+    border: 1px solid #2A3040;
+  }
+  .conn-node.local {
+    grid-column: 2;
+    grid-row: 1;
+    background: transparent;
+    border: 2px solid #F5F2EA;
+    text-align: center;
+  }
+  .conn-node.source {
+    grid-column: 1;
+    grid-row: 2;
+    border-left: 3px solid var(--raw);
+  }
+  .conn-node.target {
+    grid-column: 3;
+    grid-row: 2;
+    border-left: 3px solid var(--silver);
+  }
+  .conn-eyebrow {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-inv-2);
+    margin-bottom: 8px;
+  }
+  .conn-node.source .conn-eyebrow { color: #E6B77C; }
+  .conn-node.target .conn-eyebrow { color: #85B7EB; }
+  .conn-title {
+    font-family: var(--f-display);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--ink-inv);
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  .conn-detail {
+    font-size: 13px;
+    color: var(--ink-inv-2);
+    line-height: 1.5;
+  }
+  .conn-arrows {
+    grid-column: 1 / span 3;
+    grid-row: 3;
+    padding-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    text-align: center;
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-inv-2);
+  }
+  .conn-file {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: end;
+    padding: 12px 16px;
+    background: transparent;
+    border: 1px dashed var(--ink-inv-2);
+    border-radius: 4px;
+    font-family: var(--f-mono);
+    font-size: 13px;
+    text-align: center;
+    color: var(--ink-inv);
+  }
+  .conn-file .conn-file-note {
+    display: block;
+    font-size: 11px;
+    color: var(--ink-inv-2);
+    margin-top: 4px;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  @media (max-width: 700px) {
+    .conn-grid { grid-template-columns: 1fr; }
+    .conn-node.local, .conn-node.source, .conn-node.target, .conn-file {
+      grid-column: 1 !important; grid-row: auto !important;
+    }
+  }
+
+  /* ===================== EXECUTION SEQUENCE ===================== */
+  .sequence {
+    margin: 40px 0;
+    counter-reset: step;
+  }
+  .seq-row {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 24px;
+    position: relative;
+    padding-bottom: 24px;
+  }
+  .seq-row::before {
+    content: '';
+    position: absolute;
+    left: 30px;
+    top: 44px;
+    bottom: 0;
+    width: 1px;
+    background: var(--rule);
+  }
+  .seq-row:last-child::before { display: none; }
+  .seq-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--bg-panel);
+    border: 2px solid var(--raw);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--f-display);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--raw);
+    position: relative;
+    z-index: 1;
+  }
+  .seq-badge.critical {
+    background: var(--critical-bg);
+    border-color: var(--critical);
+    color: var(--critical);
+  }
+  .seq-body {
+    padding-top: 6px;
+    padding-bottom: 20px;
+  }
+  .seq-name {
+    font-family: var(--f-display);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+  .seq-meta {
+    font-family: var(--f-mono);
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-bottom: 12px;
+  }
+  .seq-detail {
+    font-size: 14px;
+    color: var(--ink-2);
+    line-height: 1.55;
+    max-width: 640px;
+  }
+  .seq-warn {
+    display: inline-block;
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--critical);
+    background: var(--critical-bg);
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+
+  /* ===================== MEDALLION LAYERS ===================== */
+  .layers {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin: 32px 0;
+  }
+  @media (max-width: 900px) { .layers { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 500px) { .layers { grid-template-columns: 1fr; } }
+
+  .layer {
+    background: var(--bg-panel);
+    padding: 24px 20px;
+    border-radius: 6px;
+    border-top: 3px solid var(--rule);
+    position: relative;
+  }
+  .layer.raw    { border-top-color: var(--raw); background: var(--raw-bg); }
+  .layer.silver { border-top-color: var(--silver); background: var(--silver-bg); }
+  .layer.gold   { border-top-color: var(--gold); background: var(--gold-bg); }
+  .layer.obt    { border-top-color: var(--obt); background: var(--obt-bg); }
+  .layer.insight{ border-top-color: var(--insight); background: var(--insight-bg); }
+
+  .layer-name {
+    font-family: var(--f-display);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+  .layer.raw    .layer-name { color: var(--raw); }
+  .layer.silver .layer-name { color: var(--silver); }
+  .layer.gold   .layer-name { color: var(--gold); }
+  .layer.obt    .layer-name { color: var(--obt); }
+  .layer.insight .layer-name { color: var(--insight); }
+
+  .layer-tag {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 16px;
+  }
+  .layer-role {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.5;
+    min-height: 90px;
+  }
+  .layer-map {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--rule);
+    font-family: var(--f-mono);
+    font-size: 11px;
+    color: var(--ink-2);
+  }
+  .layer-map strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* ===================== DOMAIN CHIPS ===================== */
+  .domain-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .chip {
+    background: transparent;
+    border: 1px solid var(--rule-strong);
+    color: var(--ink-2);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-family: var(--f-mono);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .chip:hover { background: var(--bg-tint); border-color: var(--ink-3); }
+  .chip.active { background: var(--ink); color: var(--ink-inv); border-color: var(--ink); }
+
+  .raw-domain-panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--raw);
+    padding: 24px;
+    border-radius: 4px;
+  }
+  .raw-domain-title {
+    font-family: var(--f-display);
+    font-size: 18px;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .raw-domain-tables {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .table-token {
+    font-family: var(--f-mono);
+    font-size: 12px;
+    background: var(--bg-tint);
+    padding: 4px 10px;
+    border-radius: 3px;
+    color: var(--ink);
+  }
+
+  /* ===================== 7 TRANSFORMATIONS ===================== */
+  .transforms {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+    margin: 32px 0;
+    counter-reset: xf;
+  }
+  .xf {
+    background: var(--bg-panel);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--silver);
+    padding: 20px;
+    border-radius: 4px;
+    counter-increment: xf;
+  }
+  .xf::before {
+    content: counter(xf, decimal-leading-zero);
+    font-family: var(--f-mono);
+    font-size: 11px;
+    color: var(--silver);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .xf-title {
+    font-family: var(--f-display);
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  .xf-body {
+    font-size: 13px;
+    color: var(--ink-2);
+    line-height: 1.55;
+  }
+  .xf-body code {
+    font-size: 11.5px;
+    background: var(--bg-tint);
+  }
+
+  /* ===================== THE BIG CONTRAST ===================== */
+  .verdict {
+    background: var(--bg-dark);
+    color: var(--ink-inv);
+    border-radius: 8px;
+    padding: 48px 40px;
+    margin: 40px 0;
+  }
+  .verdict-eyebrow {
+    font-family: var(--f-mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--critical);
+    margin-bottom: 16px;
+  }
+  .verdict-title {
+    font-family: var(--f-display);
+    font-size: 44px;
+    font-weight: 500;
+    color: var(--ink-inv);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .verdict-title em {
+    font-style: italic;
+    color: #E6B77C;
+  }
+  .verdict-sub {
+    font-family: var(--f-display);
+    font-size: 18px;
+    color: var(--ink-inv-2);
+    max-width: 560px;
+    line-height: 1.4;
+    margin-bottom: 40px;
+  }
+  .verdict-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 700px) { .verdict-split { grid-template-columns: 1fr; } }
+  .verdict-col {
+    padding: 24px;
+    background: var(--bg-dark-2);
+    border-radius: 6px;
+  }
+  .verdict-col.left { border-top: 3px solid #85B7EB; }
+  .verdict-col.right { border-top: 3px solid #7DD3AE; }
+  .verdict-col-label {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .verdict-col.left .verdict-col-label { color: #85B7EB; }
+  .verdict-col.right .verdict-col-label { color: #7DD3AE; }
+  .verdict-col-code {
+    font-family: var(--f-mono);
+    font-size: 18px;
+    color: var(--ink-inv);
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .verdict-col ul { list-style: none; padding: 0; }
+  .verdict-col ul li {
+    padding: 6px 0 6px 18px;
+    position: relative;
+    font-size: 13px;
+    color: var(--ink-inv);
+    line-height: 1.4;
+  }
+  .verdict-col ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    top: 6px;
+  }
+  .verdict-col.left ul li::before { color: #85B7EB; }
+  .verdict-col.right ul li::before { color: #7DD3AE; }
+  .verdict-col-foot {
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 1px dashed rgba(255,255,255,0.15);
+    font-family: var(--f-mono);
+    font-size: 11px;
+    color: var(--ink-inv-2);
+  }
+
+  /* ===================== GOLD DIMS AND FACTS ===================== */
+  .table-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 8px;
+    margin: 20px 0;
+  }
+  .tg-item {
+    background: var(--bg-panel);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--gold);
+    padding: 16px;
+    border-radius: 4px;
+  }
+  .tg-name {
+    font-family: var(--f-mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .tg-desc {
+    font-size: 12px;
+    color: var(--ink-2);
+    line-height: 1.5;
+  }
+
+  .obt-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+  .obt-grid .tg-item { border-left-color: var(--obt); }
+  .obt-grid .tg-name { color: var(--obt); }
+
+  /* ===================== TABS FOR RAW-VS-SILVER ===================== */
+  .rvs-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .rvs-tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 12px 20px;
+    font-family: var(--f-mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: -1px;
+  }
+  .rvs-tab:hover { color: var(--ink); }
+  .rvs-tab.active {
+    color: var(--ink);
+    border-bottom-color: var(--ink);
+  }
+  .rvs-panel { display: none; }
+  .rvs-panel.active { display: block; }
+
+  .rvs-compare {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr;
+    gap: 16px;
+    align-items: stretch;
+    margin: 24px 0;
+  }
+  .rvs-side {
+    background: var(--bg-panel);
+    padding: 24px;
+    border-radius: 4px;
+    border-top: 3px solid;
+  }
+  .rvs-side.raw { border-top-color: var(--raw); }
+  .rvs-side.silver { border-top-color: var(--silver); }
+  .rvs-side-label {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .rvs-side.raw .rvs-side-label { color: var(--raw); }
+  .rvs-side.silver .rvs-side-label { color: var(--silver); }
+  .rvs-side-headline {
+    font-family: var(--f-display);
+    font-size: 16px;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+  .rvs-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-3);
+    font-size: 20px;
+  }
+  .rvs-example {
+    font-family: var(--f-mono);
+    font-size: 12px;
+    background: var(--bg);
+    padding: 10px 12px;
+    border-radius: 3px;
+    color: var(--ink);
+    line-height: 1.6;
+    margin: 4px 0;
+  }
+  .rvs-example .label { color: var(--ink-3); }
+  .rvs-example .strike { text-decoration: line-through; opacity: 0.4; }
+  @media (max-width: 700px) {
+    .rvs-compare { grid-template-columns: 1fr; }
+    .rvs-arrow { transform: rotate(90deg); padding: 8px 0; }
+  }
+
+  /* ===================== ANTI-PATTERNS ===================== */
+  .traps {
+    margin: 32px 0;
+  }
+  .trap {
+    display: grid;
+    grid-template-columns: 40px 1fr 1.5fr;
+    gap: 20px;
+    align-items: start;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .trap-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--critical-bg);
+    color: var(--critical);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--f-mono);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1;
+  }
+  .trap-title {
+    font-family: var(--f-display);
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .trap-why {
+    font-size: 14px;
+    color: var(--ink-2);
+    line-height: 1.55;
+  }
+  @media (max-width: 700px) {
+    .trap { grid-template-columns: 32px 1fr; }
+    .trap-why { grid-column: 1 / -1; margin-left: 0; }
+  }
+
+  /* ===================== TAKEAWAYS ===================== */
+  .takeaways {
+    background: var(--bg-dark);
+    color: var(--ink-inv);
+    padding: 60px 40px;
+    border-radius: 8px;
+    margin: 40px 0 60px;
+  }
+  .takeaway-heading {
+    font-family: var(--f-display);
+    font-size: 44px;
+    font-weight: 500;
+    color: var(--ink-inv);
+    letter-spacing: -0.02em;
+    margin-bottom: 40px;
+    line-height: 1;
+  }
+  .takeaway-heading em { color: #E6B77C; font-style: italic; }
+  .takeaway-list { display: flex; flex-direction: column; }
+  .takeaway {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 24px;
+    padding: 24px 0;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  .takeaway:last-child { border-bottom: 1px solid rgba(255,255,255,0.12); }
+  .takeaway-num {
+    font-family: var(--f-mono);
+    font-size: 14px;
+    color: #E6B77C;
+    padding-top: 4px;
+  }
+  .takeaway-headline {
+    font-family: var(--f-display);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink-inv);
+    margin-bottom: 6px;
+    line-height: 1.25;
+  }
+  .takeaway-detail {
+    font-size: 14px;
+    color: var(--ink-inv-2);
+    line-height: 1.55;
+  }
+
+  /* ===================== FOOTER ===================== */
+  .footer {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 40px 32px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--f-mono);
+    font-size: 12px;
+    color: var(--ink-3);
+    border-top: 1px solid var(--rule);
+  }
+  @media (max-width: 600px) {
+    .footer { flex-direction: column; gap: 12px; align-items: flex-start; }
+  }
+
+  /* ===================== SR-ONLY / A11Y ===================== */
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+  :focus-visible { outline: 2px solid var(--critical); outline-offset: 2px; border-radius: 2px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ TOP NAV ============ -->
+<nav class="topnav" aria-label="Document navigation">
+  <div class="topnav-inner">
+    <div class="topnav-brand">
+      <span class="doc-id">REF/D365-AN/1.0</span>
+      <span class="doc-title">D365 F&amp;O Analytics — Technical Reference</span>
+    </div>
+    <ul class="topnav-links">
+      <li><a href="#scripts">Scripts</a></li>
+      <li><a href="#execution">Execution</a></li>
+      <li><a href="#medallion">Medallion</a></li>
+      <li><a href="#silver-vs-entity">Silver ≠ Entity</a></li>
+      <li><a href="#guidance">Guidance</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div>
+    <div class="hero-eyebrow">Technical briefing · Data architecture</div>
+    <h1 class="hero-title">The FastTrack scripts,<br><em>and where they don't run.</em></h1>
+    <p class="hero-sub">A working reference for the Microsoft EntityUtil and AdditionalScripts toolsets — what they do, where they run, and how their logic maps to a Databricks medallion architecture.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Source</span>
+        <span class="hero-meta-value">FastTrack GitHub</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Audience</span>
+        <span class="hero-meta-value">Data architects &amp; engineers</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Scope</span>
+        <span class="hero-meta-value">10 files, 5 layers</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-stat">
+    <div class="hero-stat-num">0</div>
+    <div class="hero-stat-label">Scripts in this toolset that run in Databricks. They are Synapse Link tooling — but their internal logic is a blueprint for your lakehouse.</div>
+  </div>
+</header>
+
+<main class="content">
+
+<!-- ============ SECTION 1: QUESTIONS ============ -->
+<section class="section" id="questions">
+  <div class="section-marker">
+    <div class="section-marker-inner">
+      <div class="section-num">§ 01</div>
+      <div class="section-kicker">Overview</div>
+    </div>
+  </div>
+  <div>
+    <h2 class="section-title">Three questions <em>this document answers.</em></h2>
+    <p class="section-lede">If you came here from a search result, these are the questions you probably had. Jump straight to the section that matches.</p>
+
+    <div class="questions">
+      <div class="q-item">
+        <div class="q-num">01</div>
+        <div>
+          <div class="q-text">What are the EntityUtil and AdditionalScripts, really?</div>
+          <div class="q-answer">Migration tooling built by Microsoft's FastTrack team to help customers move off BYOD. They recreate BYOD-style entity views on top of the raw tables that Synapse Link now exports. Not a runtime — a migration aid.</div>
+        </div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">02</div>
+        <div>
+          <div class="q-text">Where do they run, and where do they not run?</div>
+          <div class="q-answer">PowerShell on a local Windows machine, connecting outbound to a D365 sandbox and a target SQL database (Synapse, Fabric, or Azure SQL). They do not produce Delta tables. They do not run on Spark. They are not a Databricks tool.</div>
+        </div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">03</div>
+        <div>
+          <div class="q-text">How does this map to Raw / Silver / Gold / OBT?</div>
+          <div class="q-answer">Their logic is a blueprint. Inheritance joins map to Silver. Entity joins map to Gold. The discovery SQL tells you which child tables to add to Synapse Link. But you rewrite the transformations in Spark; you do not run the .ps1 files.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 2: BYOD vs SYNAPSE LINK ============ -->
+<section class="section" id="origin">
+  <div class="section-marker">
+    <div class="section-marker-inner">
+      <div class="section-num">§ 02</div>
+      <div class="section-kicker">Origin</div>
+    </div>
+  </div>
+  <div>
+    <h2 class="section-title">Why these scripts <em>exist at all.</em></h2>
+    <p class="section-lede">BYOD delivered pre-joined entity views. Synapse Link delivers raw tables. The scripts bridge that gap for customers still consuming entity-shaped data.</p>
+
+    <div class="compare-cols">
+      <div class="compare-card raw">
+        <div class="compare-eyebrow">BYOD — legacy</div>
+        <div class="compare-title">Pre-joined entity views, scheduled batch</div>
+        <ul class="compare-list">
+          <li>Scheduled export from F&amp;O to a customer-managed Azure SQL DB</li>
+          <li>Delivered flat data entities — <code>CustCustomerV3Entity</code> joined ten tables at source</li>
+          <li>Reporting consumed the entity directly with no reconstruction</li>
+          <li>Being deprecated: locks the source, poor incremental support</li>
+        </ul>
+      </div>
+      <div class="compare-card silver">
+        <div class="compare-eyebrow">Synapse Link — current</div>
+        <div class="compare-title">Raw tables, near-real-time change tracking</div>
+        <ul class="compare-list">
+          <li>Change-tracked replication to Azure Data Lake Storage</li>
+          <li>Individual base tables — not entities</li>
+          <li>Consumer responsible for reconstructing entity shapes</li>
+          <li>Inherited tables (<code>DirPartyTable</code>) land as fragments</li>
+        </ul>
+      </div>
+    </div>
+
+    <p>The scripts sit between the raw Synapse Link output and the reports that expect BYOD-style shapes. For a lakehouse team, the same reconstruction happens in Databricks notebooks — the scripts are useful as a blueprint, not as a runtime.</p>
+  </div>
+</section>
+
+<!-- ============ SECTION 3: SCRIPT INVENTORY ============ -->
+<section class="section" id="scripts">
+  <div class="section-marker">
+    <div class="section-marker-inner">
+      <div class="section-num">§ 03</div>
+      <div class="section-kicker">Reference</div>
+    </div>
+  </div>
+  <div>
+    <h2 class="section-title">Every script, <em>in execution order.</em></h2>
+    <p class="section-lede">Ten files, two directories. Click any card to expand the operational detail — source, output, consumer.</p>
+
+    <div class="scripts">
+
+      <details class="script-card">
+        <summary class="script-summary">
+          <div class="script-step">0</div>
+          <div>
+            <div class="script-name">get_derivetables.sql</div>
+            <div class="script-role">Discovery — enumerate the D365 inheritance hierarchy</div>
+          </div>
+          <div class="script-role">T-SQL · SSMS</div>
+          <div class="script-chevron">›</div>
+        </summary>
+        <div class="script-body">
+          <dl>
+            <dt>Runs on</dt><dd>SSMS or Azure Data Studio on your local machine</dd>
+            <dt>Connects to</dt><dd>D365 F&amp;O sandbox via LCS JIT credentials</dd>
+            <dt>Reads</dt><dd><code>TableIdTable</code>, <code>SYSANCESTORSTABLE</code>, <code>TABLEFIELDIDTABLE</code></dd>
+            <dt>Writes</dt><dd>Nothing to disk — results in the SSMS query grid only</dd>
+            <dt>Consumed by</dt><dd>YOU, manually</dd>
+          </dl>
+          <p>A recursive CTE that walks D365's table-inheritance tree. Produces one row per parent table with three columns: <code>parenttable</code>, <code>childtables</code> (comma-separated), and <code>joinstatement</code> (a complete <code>SELECT … LEFT OUTER JOIN</code>).</p>
+          <div class="note"><strong>Run this first</strong> — before touching any PowerShell script and before finalising which tables to add to Synapse Link. It's the discovery step that tells you what data would otherwise be silently missing.</div>
+        </div>
+      </details>
+
+      <details class="script-card">
+        <summary class="script-summary">
+          <div class="script-step">1</div>
+          <div>
+            <div class="script-name">GenerateEntityDependency.ps1</div>
+            <div class="script-role">Extract entity DDL from the sandbox</div>
+          </div>
+          <div class="script-role">PowerShell</div>
+          <div class="script-chevron">›</div>
+        </summary>
+        <div class="script-body">
+          <dl>
+            <dt>Runs on</dt><dd>PowerShell on your local machine (RunEntityUtil menu → 1)</dd>
+            <dt>Connects to</dt><dd>D365 sandbox using SQL credentials from <code>config.json</code></dd>
+            <dt>Reads</dt><dd><code>sys.views</code>, <code>sys.sql_expression_dependencies</code>, <code>sys.sql_modules</code>, <code>INFORMATION_SCHEMA.COLUMNS</code></dd>
+            <dt>Writes</dt><dd><code>dependencies.json</code> in the scripts folder</dd>
+            <dt>Consumed by</dt><dd>Step 2 (EntityUtil.ps1)</dd>
+          </dl>
+          <p>Recursively resolves every dependency of the entities listed in <code>config.json → entityList</code>. Captures full <code>CREATE VIEW</code> DDL, referenced tables, and dependency ordering. Once this file is written, the sandbox isn't touched again.</p>
+        </div>
+      </details>
+
+      <details class="script-card">
+        <summary class="script-summary">
+          <div class="script-step">—</div>
+          <div>
+            <div class="script-name">config.json (manual edit)</div>
+            <div class="script-role">Central configuration</div>
+          </div>
+          <div class="script-role">JSON</div>
+          <div class="script-chevron">›</div>
+        </summary>
+        <div class="script-body">
+          <dl>
+            <dt>Runs on</dt><dd>Text editor on your local machine</dd>
+            <dt>Reads</dt><dd>—</dd>
+            <dt>Writes</dt><dd>Updated JSON on disk</dd>
+            <dt>Consumed by</dt><dd>All PowerShell scripts (Steps 1 through 5)</dd>
+          </dl>
+          <p>Set <code>targetServerName</code>, <code>targetDatabaseName</code>, <code>dbSchema</code>, <code>tenantId</code>, <code>entityList</code>, and — after Step 0 — <code>inheritedTablesToBeCreated</code>. Also verify the two syntax-replacement JSON files match your target platform.</p>
+        </div>
+      </details>
+
+      <details class="script-card">
+        <summary class="script-summary">
+          <div class="script-step" style="color: var(--critical);">5</div>
+          <div>
+            <div class="script-name">GenerateInheritedTables.ps1 <span class="seq-warn">Run before Step 2</span></div>
+            <div class="script-role">Reassemble inherited tables in the target</div>
+          </div>
+          <div class="script-role">PowerShell</div>
+          <div class="script-chevron">›</div>
+        </summary>
+        <div class="script-body">
+          <dl>
+            <dt>Runs on</dt><dd>PowerShell on your local machine (menu → 5)</dd>
+            <dt>Connects to</dt><dd>Target database via <code>az login</code> Azure AD auth</dd>
+            <dt>Reads</dt><dd><code>tableinheritance.json</code>, <code>INFORMATION_SCHEMA.COLUMNS</code> on target</dd>
+            <dt>Writes</dt><dd><code>CREATE OR ALTER VIEW</code> statements in target DB</dd>
+            <dt>Consumed by</dt><dd>Step 2 entity views</dd>
+          </dl>
+          <p>Creates views that <code>LEFT OUTER JOIN</code> each parent table to its children on <code>recid</code>. Fabric and Serverless-replica targets only. The menu numbers it 5, but it must run <strong>before</strong> Step 2 — Step 2's entity views reference these inherited-table views.</p>
+        </div>
+      </details>
+
+      <details class="script-card">
+        <summary class="script-summary">
+          <div class="script-step">2</div>
+          <div>
+            <div class="script-name">EntityUtil.ps1</div>
+            <div class="script-role">Create entity views in the target — the payoff step</div>
+          </div>
+          <div class="script-role">PowerShell</div>
+          <div class="script-chevron">›</div>
+        </summary>
+        <div class="script-body">
+          <dl>
+            <dt>Runs on</dt><dd>PowerShell on your local machine (menu → 2)</dd>
+            <dt>Connects to</dt><dd>Target database via Azure AD</dd>
+            <dt>Reads</dt><dd><code>dependencies.json</code>, <code>ReplaceViewSyntax.json</code>, <code>ReplaceFabricViewSyntax.json</code></dd>
+            <dt>Writes</dt><dd><code>CREATE OR ALTER VIEW</code> statements in target — one per entity, in dependency order</dd>
+            <dt>Consumed by</dt><dd>Power BI, ADF, and any SQL client that used to consume BYOD entities</dd>
+          </dl>
+          <p>Detects the target platform from its connection string, translates sandbox SQL into platform-appropriate syntax (<code>FOR XML PATH</code> → <code>STRING_AGG</code>, <code>GetValidFromInContextInfo()</code> → <code>GETUTCDATE()</code>, reserved-word column fixes), and executes each view definition.</p>
+        </div>
+      </details>
+
+      <details class="script-card">
+        <summary class="script-summary">
+          <div class="script-step">3</div>
+          <div>
+            <div class="script-name">DeleteViewsFromSynapse.ps1 (target)</div>
+            <div class="script-role">Cleanup — drop views from target DB</div>
+          </div>
+          <div class="script-role">PowerShell</div>
+          <div class="script-chevron">›</div>
+        </summary>
+        <div class="script-body">
+          <dl>
+            <dt>Runs on</dt><dd>PowerShell on your local machine (menu → 3)</dd>
+            <dt>Connects to</dt><dd>Target database</dd>
+            <dt>Reads</dt><dd><code>INFORMATION_SCHEMA.TABLES</code> on target</dd>
+            <dt>Writes</dt><dd><code>DROP VIEW</code> / <code>DROP TABLE</code> statements to target</dd>
+            <dt>Consumed by</dt><dd>Nothing — cleanup utility</dd>
+          </dl>
+          <p>Housekeeping only. Preserves <code>GlobalOptionsetMetadata</code> and <code>srsanalysisenums</code> because both are expensive to regenerate.</p>
+        </div>
+      </details>
+
+      <details class="script-card">
+        <summary class="script-summary">
+          <div class="script-step">4</div>
+          <div>
+            <div class="script-name">DeleteViewsFromSynapse.ps1 (source)</div>
+            <div class="script-role">Cleanup — drop views from source serverless DB</div>
+          </div>
+          <div class="script-role">PowerShell</div>
+          <div class="script-chevron">›</div>
+        </summary>
+        <div class="script-body">
+          <dl>
+            <dt>Runs on</dt><dd>PowerShell on your local machine (menu → 4)</dd>
+            <dt>Connects to</dt><dd>Source Synapse serverless database — the one on top of the data lake, not the D365 sandbox</dd>
+            <dt>Reads</dt><dd><code>INFORMATION_SCHEMA.TABLES</code> on source</dd>
+            <dt>Writes</dt><dd><code>DROP</code> statements against source</dd>
+            <dt>Consumed by</dt><dd>Nothing — cleanup utility</dd>
+          </dl>
+          <p>Same script as Step 3, pointed at the source database. Use when you need to fully re-provision the Synapse Link output.</p>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 4: EXECUTION MODEL ============ -->
+<section class="section" id="execution">
+  <div class="section-marker">
+    <div class="section-marker-inner">
+      <div class="section-num">§ 04</div>
+      <div class="section-kicker">Execution model</div>
+    </div>
+  </div>
+  <div>
+    <h2 class="section-title">Where the scripts run <em>(and don't).</em></h2>
+    <p class="section-lede">Everything runs on a local Windows machine. From there, the scripts reach out to two different databases — never to Databricks.</p>
+
+    <div class="conn" aria-label="Connectivity diagram">
+      <div class="conn-grid">
+        <div class="conn-node local">
+          <div class="conn-eyebrow">Your local machine</div>
+          <div class="conn-title">PowerShell + Azure CLI + SSMS</div>
+          <div class="conn-detail">All scripts execute here; nothing runs server-side.</div>
+        </div>
+
+        <div class="conn-node source">
+          <div class="conn-eyebrow">Source — D365 sandbox</div>
+          <div class="conn-title">AxDB via LCS JIT</div>
+          <div class="conn-detail">Contacted by Step 0 (SSMS) and Step 1 (PowerShell). Once <code style="background:transparent;color:#E6B77C;">dependencies.json</code> exists, the sandbox is not touched again.</div>
+        </div>
+
+        <div class="conn-file">
+          dependencies.json
+          <span class="conn-file-note">Local file — the pivot point</span>
+        </div>
+
+        <div class="conn-node target">
+          <div class="conn-eyebrow">Target — SQL database</div>
+          <div class="conn-title">Synapse / Fabric / Azure SQL</div>
+          <div class="conn-detail">Contacted by Steps 2, 3, 5 via Azure AD auth. This is where entity and inherited-table views land.</div>
+        </div>
+
+        <div class="conn-arrows">
+          <div>← Read via JIT</div>
+          <div>Read + write via Azure AD →</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="h">The sequence of steps</h3>
+    <p>The menu numbers steps 1 through 5, but on Fabric and Serverless-replica targets you must run Step 5 <em>before</em> Step 2. Step 2's entity views depend on the inherited-table views Step 5 creates.</p>
+
+    <div class="sequence">
+      <div class="seq-row">
+        <div class="seq-badge">0</div>
+        <div class="seq-body">
+          <div class="seq-name">Discovery — get_derivetables.sql</div>
+          <div class="seq-meta">SSMS · reads sandbox</div>
+          <div class="seq-detail">Enumerate the D365 inheritance hierarchy. Take the output back to Power Platform admin to add every child table to your Synapse Link profile before continuing.</div>
+        </div>
+      </div>
+      <div class="seq-row">
+        <div class="seq-badge">1</div>
+        <div class="seq-body">
+          <div class="seq-name">Extract — GenerateEntityDependency.ps1</div>
+          <div class="seq-meta">PowerShell · reads sandbox · writes dependencies.json</div>
+          <div class="seq-detail">Recursively walk entity dependencies for the entities you listed in config. Everything downstream reads from the JSON file this step writes.</div>
+        </div>
+      </div>
+      <div class="seq-row">
+        <div class="seq-badge critical">5</div>
+        <div class="seq-body">
+          <div class="seq-name">Inheritance — GenerateInheritedTables.ps1 <span class="seq-warn">Must precede Step 2</span></div>
+          <div class="seq-meta">PowerShell · reads target · writes VIEWs</div>
+          <div class="seq-detail">Create the inherited-table views (parent + children joined on <code>recid</code>). Fabric and Serverless-replica only. On dbo-schema Serverless, this is skipped.</div>
+        </div>
+      </div>
+      <div class="seq-row">
+        <div class="seq-badge">2</div>
+        <div class="seq-body">
+          <div class="seq-name">Entity views — EntityUtil.ps1</div>
+          <div class="seq-meta">PowerShell · reads dependencies.json · writes VIEWs</div>
+          <div class="seq-detail">Create the entity views. This is the payoff step — after it runs, downstream reporting can consume entity-shaped data again.</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="small"><strong>Cleanup utilities (optional):</strong> Steps 3 and 4 both call <code>DeleteViewsFromSynapse.ps1</code>. Step 3 drops views in the target database; Step 4 drops views in the source serverless database. Use only when re-running the pipeline from scratch.</p>
+  </div>
+</section>
+
+<!-- ============ SECTION 5: MEDALLION ============ -->
+<section class="section" id="medallion">
+  <div class="section-marker">
+    <div class="section-marker-inner">
+      <div class="section-num">§ 05</div>
+      <div class="section-kicker">Databricks mapping</div>
+    </div>
+  </div>
+  <div>
+    <h2 class="section-title">Medallion architecture, <em>with EntityUtil steps mapped in.</em></h2>
+    <p class="section-lede">Raw → Silver → Gold → OBT → Insights. Each layer has a specific job. Where an EntityUtil step maps in, it's called out below.</p>
+
+    <div class="layers">
+      <div class="layer raw">
+        <div class="layer-name">Raw</div>
+        <div class="layer-tag">Bronze</div>
+        <div class="layer-role">Exact copy of Synapse Link output. Every version, every delete marker, every infrastructure column retained.</div>
+        <div class="layer-map"><strong>Analogue:</strong> none</div>
+      </div>
+      <div class="layer silver">
+        <div class="layer-name">Silver</div>
+        <div class="layer-tag">Layer</div>
+        <div class="layer-role">Each D365 table made whole and clean. Inherited tables reconstructed. Enums resolved. Types cast.</div>
+        <div class="layer-map"><strong>Analogue:</strong> Step 5</div>
+      </div>
+      <div class="layer gold">
+        <div class="layer-name">Gold</div>
+        <div class="layer-tag">Dim + Fact</div>
+        <div class="layer-role">Star-schema dimensions and facts with surrogate keys. Business modelling happens here.</div>
+        <div class="layer-map"><strong>Analogue:</strong> Step 2</div>
+      </div>
+      <div class="layer obt">
+        <div class="layer-name">OBT</div>
+        <div class="layer-tag">One Big Table</div>
+        <div class="layer-role">Denormalised wide tables per business domain. Pre-joined for BI performance.</div>
+        <div class="layer-map"><strong>Analogue:</strong> n/a</div>
+      </div>
+      <div class="layer insight">
+        <div class="layer-name">Insights</div>
+        <div class="layer-tag">BI + ML</div>
+        <div class="layer-role">Power BI dashboards, ML models, and operational alerts read from OBTs.</div>
+        <div class="layer-map"><strong>Analogue:</strong> n/a</div>
+      </div>
+    </div>
+
+    <h3 class="h">Raw — what to land</h3>
+    <p>Include every child table from <code>get_derivetables.sql</code>. Do not filter deletes or drop infrastructure columns at this layer.</p>
+
+    <div class="domain-chips" role="tablist" aria-label="Raw layer domain filter">
+      <button class="chip active" data-domain="all" aria-selected="true">All domains</button>
+      <button class="chip" data-domain="party" aria-selected="false">Party</button>
+      <button class="chip" data-domain="master" aria-selected="false">Masters</button>
+      <button class="chip" data-domain="product" aria-selected="false">Product</button>
+      <button class="chip" data-domain="sales" aria-selected="false">Sales</button>
+      <button class="chip" data-domain="purchase" aria-selected="false">Purchase</button>
+      <button class="chip" data-domain="finance" aria-selected="false">Finance</button>
+      <button class="chip" data-domain="inventory" aria-selected="false">Inventory</button>
+      <button class="chip" data-domain="ref" aria-selected="false">Reference</button>
+    </div>
+
+    <div id="raw-domain-list">
+      <div class="raw-domain-panel" data-domain="party">
+        <div class="raw-domain-title">Party &amp; address</div>
+        <div class="raw-domain-tables">
+          <span class="table-token">dirpartytable</span>
+          <span class="table-token">companyinfo</span>
+          <span class="table-token">dirperson</span>
+          <span class="table-token">dirorganization</span>
+          <span class="table-token">dirorganizationbase</span>
+          <span class="table-token">ominternalorganization</span>
+          <span class="table-token">omoperatingunit</span>
+          <span class="table-token">omteam</span>
+          <span class="table-token">logisticspostaladdress</span>
+          <span class="table-token">logisticselectronicaddress</span>
+          <span class="table-token">logisticslocation</span>
+          <span class="table-token">dirpartylocation</span>
+        </div>
+      </div>
+      <div class="raw-domain-panel" data-domain="master" style="margin-top:8px;">
+        <div class="raw-domain-title">Customer &amp; vendor masters</div>
+        <div class="raw-domain-tables">
+          <span class="table-token">custtable</span>
+          <span class="table-token">custgroup</span>
+          <span class="table-token">vendtable</span>
+          <span class="table-token">vendgroup</span>
+          <span class="table-token">custsettlement</span>
+        </div>
+      </div>
+      <div class="raw-domain-panel" data-domain="product" style="margin-top:8px;">
+        <div class="raw-domain-title">Product</div>
+        <div class="raw-domain-tables">
+          <span class="table-token">ecoresproduct</span>
+          <span class="table-token">ecoresdistinctproduct</span>
+          <span class="table-token">ecoresdistinctproductvariant</span>
+          <span class="table-token">ecoresproductmaster</span>
+          <span class="table-token">inventtable</span>
+          <span class="table-token">inventitemgroupitem</span>
+          <span class="table-token">ecoresproductcategory</span>
+          <span class="table-token">ecorescategory</span>
+          <span class="table-token">unitofmeasure</span>
+        </div>
+      </div>
+      <div class="raw-domain-panel" data-domain="sales" style="margin-top:8px;">
+        <div class="raw-domain-title">Sales</div>
+        <div class="raw-domain-tables">
+          <span class="table-token">salestable</span>
+          <span class="table-token">salesline</span>
+          <span class="table-token">custinvoicejour</span>
+          <span class="table-token">custinvoicetrans</span>
+          <span class="table-token">custpackingslipjour</span>
+          <span class="table-token">custpackingsliptrans</span>
+        </div>
+      </div>
+      <div class="raw-domain-panel" data-domain="purchase" style="margin-top:8px;">
+        <div class="raw-domain-title">Purchase</div>
+        <div class="raw-domain-tables">
+          <span class="table-token">purchtable</span>
+          <span class="table-token">purchline</span>
+          <span class="table-token">vendinvoicejour</span>
+          <span class="table-token">vendinvoicetrans</span>
+          <span class="table-token">purchreqtable</span>
+          <span class="table-token">purchreqline</span>
+        </div>
+      </div>
+      <div class="raw-domain-panel" data-domain="finance" style="margin-top:8px;">
+        <div class="raw-domain-title">Finance &amp; GL</div>
+        <div class="raw-domain-tables">
+          <span class="table-token">generaljournalentry</span>
+          <span class="table-token">generaljournalaccountentry</span>
+          <span class="table-token">subledgervouchergeneraljournalentry</span>
+          <span class="table-token">mainaccount</span>
+          <span class="table-token">mainaccountcategory</span>
+          <span class="table-token">dimensionattributevaluecombination</span>
+          <span class="table-token">dimensionattributevaluesetitem</span>
+          <span class="table-token">dimensionattributevalue</span>
+          <span class="table-token">dimensionattribute</span>
+          <span class="table-token">fiscalcalendarperiod</span>
+          <span class="table-token">ledger</span>
+          <span class="table-token">custtrans</span>
+          <span class="table-token">vendtrans</span>
+        </div>
+      </div>
+      <div class="raw-domain-panel" data-domain="inventory" style="margin-top:8px;">
+        <div class="raw-domain-title">Inventory &amp; warehouse</div>
+        <div class="raw-domain-tables">
+          <span class="table-token">inventtrans</span>
+          <span class="table-token">inventdim</span>
+          <span class="table-token">inventsite</span>
+          <span class="table-token">inventlocation</span>
+          <span class="table-token">inventsum</span>
+          <span class="table-token">inventbatch</span>
+          <span class="table-token">wmslocation</span>
+        </div>
+      </div>
+      <div class="raw-domain-panel" data-domain="ref" style="margin-top:8px;">
+        <div class="raw-domain-title">Reference &amp; enum</div>
+        <div class="raw-domain-tables">
+          <span class="table-token">srsanalysisenums</span>
+          <span class="table-token">globaloptionsetmetadata</span>
+          <span class="table-token">currency</span>
+          <span class="table-token">exchrates</span>
+          <span class="table-token">hcmworker</span>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="h">Silver — the seven transformations</h3>
+    <p>This is the work. Every downstream layer depends on Silver being correct.</p>
+
+    <div class="transforms">
+      <div class="xf">
+        <div class="xf-title">Filter soft deletes</div>
+        <div class="xf-body"><code>WHERE IsDelete = 0</code> — removes records logically deleted upstream.</div>
+      </div>
+      <div class="xf">
+        <div class="xf-title">Deduplicate on <code>recid</code></div>
+        <div class="xf-body">Keep the row with the highest <code>versionnumber</code> per <code>recid</code>. Synapse Link may land multiple versions during incremental sync.</div>
+      </div>
+      <div class="xf">
+        <div class="xf-title">Reconstruct inherited tables</div>
+        <div class="xf-body"><code>LEFT OUTER JOIN</code> each parent to all its children on <code>recid</code>. The join statements from Step 0 are your blueprint.</div>
+      </div>
+      <div class="xf">
+        <div class="xf-title">Resolve enum labels</div>
+        <div class="xf-body">Add a <code>_label</code> column beside each enum integer by joining to <code>srsanalysisenums</code>.</div>
+      </div>
+      <div class="xf">
+        <div class="xf-title">Clean column names</div>
+        <div class="xf-body">Strip trailing underscores from reserved words (<code>LEVEL_</code> → <code>level</code>). Drop Synapse Link infrastructure columns.</div>
+      </div>
+      <div class="xf">
+        <div class="xf-title">Cast data types</div>
+        <div class="xf-body">String → Timestamp / Decimal / Integer. Standardise <code>dataareaid</code> casing to upper case.</div>
+      </div>
+      <div class="xf">
+        <div class="xf-title">Explode financial dimensions</div>
+        <div class="xf-body">Pivot the <code>DimensionAttributeValueCombination</code> hierarchy into named columns per your chart of accounts.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 6: SILVER vs ENTITY ============ -->
+<section class="section" id="silver-vs-entity">
+  <div class="section-marker">
+    <div class="section-marker-inner">
+      <div class="section-num">§ 06</div>
+      <div class="section-kicker">Critical</div>
+    </div>
+  </div>
+  <div>
+    <h2 class="section-title">Silver <em>is not</em> an entity.</h2>
+    <p class="section-lede">This is the single most common trap for teams transitioning from BYOD. Reconstructing an inherited table is not the same job as recreating a D365 entity. They live in different layers.</p>
+
+    <div class="verdict">
+      <div class="verdict-eyebrow">Common confusion</div>
+      <h3 class="verdict-title">Different joins, <em>different layers.</em></h3>
+      <p class="verdict-sub">An inherited-table join makes one D365 table whole again. An entity join stitches many different tables into a business shape.</p>
+
+      <div class="verdict-split">
+        <div class="verdict-col left">
+          <div class="verdict-col-label">Inherited-table join · Silver</div>
+          <div class="verdict-col-code">silver_dirpartytable</div>
+          <ul>
+            <li>Joins a table to its own inheritance children</li>
+            <li>All rows share the same <code style="background:rgba(133,183,235,0.15);color:#85B7EB;">recid</code></li>
+            <li>Purpose: reassemble one D365 table</li>
+            <li>= dirpartytable + companyinfo + dirperson + dirorganization</li>
+          </ul>
+          <div class="verdict-col-foot">Analogue to EntityUtil Step 5</div>
+        </div>
+        <div class="verdict-col right">
+          <div class="verdict-col-label">Entity-style join · Gold</div>
+          <div class="verdict-col-code">dim_customer</div>
+          <ul>
+            <li>Joins entirely different tables</li>
+            <li>Different <code style="background:rgba(125,211,174,0.15);color:#7DD3AE;">recids</code>, different domains</li>
+            <li>Purpose: build a business dimension or fact</li>
+            <li>= custtable + silver_dirpartytable + custgroup + address</li>
+          </ul>
+          <div class="verdict-col-foot">Analogue to EntityUtil Step 2</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="h">Why keep them separate</h3>
+    <p>If Silver contained entities, <code>silver_CustCustomerV3Entity</code>, <code>silver_VendVendorV2Entity</code> and <code>silver_HcmWorkerEntity</code> would each contain their own copy of the <code>DirPartyTable</code> join. Party address logic would live in three places. Any change would require three edits.</p>
+    <p>Instead, keep Silver granular: one <code>silver_dirpartytable</code>, referenced by every Gold dimension that needs party attributes. Change once, propagate everywhere.</p>
+  </div>
+</section>
+
+<!-- ============ SECTION 7: GOLD ============ -->
+<section class="section" id="gold">
+  <div class="section-marker">
+    <div class="section-marker-inner">
+      <div class="section-num">§ 07</div>
+      <div class="section-kicker">Gold layer</div>
+    </div>
+  </div>
+  <div>
+    <h2 class="section-title">Star schema — <em>dimensions and facts.</em></h2>
+    <p class="section-lede">Gold is where business modelling happens. Silver tables join together into dimensions and facts with surrogate keys, SCD2 where relevant, and pre-computed measures.</p>
+
+    <h4 class="h">Dimensions</h4>
+    <div class="table-grid">
+      <div class="tg-item"><div class="tg-name">dim_customer</div><div class="tg-desc">custtable + dirpartytable + custgroup + primary postal address</div></div>
+      <div class="tg-item"><div class="tg-name">dim_vendor</div><div class="tg-desc">vendtable + dirpartytable + vendgroup + primary postal address</div></div>
+      <div class="tg-item"><div class="tg-name">dim_product</div><div class="tg-desc">ecoresproduct + inventtable + category + unit of measure</div></div>
+      <div class="tg-item"><div class="tg-name">dim_date</div><div class="tg-desc">Generated calendar + fiscalcalendar for fiscal periods</div></div>
+      <div class="tg-item"><div class="tg-name">dim_legal_entity</div><div class="tg-desc">dirpartytable filtered to CompanyInfo rows</div></div>
+      <div class="tg-item"><div class="tg-name">dim_warehouse</div><div class="tg-desc">inventlocation + inventsite</div></div>
+      <div class="tg-item"><div class="tg-name">dim_account</div><div class="tg-desc">mainaccount + exploded financial dimensions</div></div>
+      <div class="tg-item"><div class="tg-name">dim_worker</div><div class="tg-desc">hcmworker + dirpartytable filtered to DirPerson</div></div>
+    </div>
+
+    <h4 class="h">Facts — grain: one transaction line</h4>
+    <div class="table-grid">
+      <div class="tg-item"><div class="tg-name">fact_sales_order</div><div class="tg-desc">qty_ordered, qty_delivered, line_amount, discount, tax, net_amount</div></div>
+      <div class="tg-item"><div class="tg-name">fact_sales_invoice</div><div class="tg-desc">invoiced_qty, line_amount, tax_amount, invoice_amount</div></div>
+      <div class="tg-item"><div class="tg-name">fact_purchase_order</div><div class="tg-desc">qty_ordered, qty_received, line_amount, discount</div></div>
+      <div class="tg-item"><div class="tg-name">fact_general_ledger</div><div class="tg-desc">accounting_amount, reporting_amount, transaction_amount</div></div>
+      <div class="tg-item"><div class="tg-name">fact_customer_transactions</div><div class="tg-desc">amount_mst, amount_cur, settlement_amount</div></div>
+      <div class="tg-item"><div class="tg-name">fact_vendor_transactions</div><div class="tg-desc">amount_mst, amount_cur</div></div>
+      <div class="tg-item"><div class="tg-name">fact_inventory_transactions</div><div class="tg-desc">qty, cost_amount_physical, cost_amount_financial</div></div>
+      <div class="tg-item"><div class="tg-name">fact_inventory_onhand</div><div class="tg-desc">physical_qty, available_physical, ordered_qty (snapshot)</div></div>
+    </div>
+
+    <h4 class="h">OBTs — one big table per business domain</h4>
+    <p>Wide, denormalised, pre-joined for BI performance. Materialise with Delta Z-ORDER on high-selectivity columns.</p>
+    <div class="table-grid obt-grid">
+      <div class="tg-item"><div class="tg-name">obt_sales</div><div class="tg-desc">sales_order + sales_invoice + customer + product + date + warehouse + legal_entity</div></div>
+      <div class="tg-item"><div class="tg-name">obt_procurement</div><div class="tg-desc">purchase_order + vendor + product + date + warehouse</div></div>
+      <div class="tg-item"><div class="tg-name">obt_finance</div><div class="tg-desc">general_ledger + account + date + legal_entity</div></div>
+      <div class="tg-item"><div class="tg-name">obt_ar_aging</div><div class="tg-desc">customer_transactions + customer + date + aging bucket calc</div></div>
+      <div class="tg-item"><div class="tg-name">obt_inventory</div><div class="tg-desc">inventory_onhand + inventory_transactions + product + warehouse + date</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 8: RAW vs SILVER COMPARISON ============ -->
+<section class="section" id="raw-vs-silver">
+  <div class="section-marker">
+    <div class="section-marker-inner">
+      <div class="section-num">§ 08</div>
+      <div class="section-kicker">Comparison</div>
+    </div>
+  </div>
+  <div>
+    <h2 class="section-title">Raw vs Silver — <em>concrete examples.</em></h2>
+    <p class="section-lede">Switch between the seven transformations to see what actually changes between the two layers.</p>
+
+    <div class="rvs-tabs" role="tablist" aria-label="Raw vs Silver transformation">
+      <button class="rvs-tab active" data-tab="deletes" aria-selected="true">Soft deletes</button>
+      <button class="rvs-tab" data-tab="dupes" aria-selected="false">Duplicates</button>
+      <button class="rvs-tab" data-tab="inherit" aria-selected="false">Inherited tables</button>
+      <button class="rvs-tab" data-tab="enums" aria-selected="false">Enum values</button>
+      <button class="rvs-tab" data-tab="cols" aria-selected="false">Column names</button>
+      <button class="rvs-tab" data-tab="types" aria-selected="false">Data types</button>
+      <button class="rvs-tab" data-tab="dims" aria-selected="false">Financial dimensions</button>
+    </div>
+
+    <div class="rvs-panel active" data-panel="deletes">
+      <div class="rvs-compare">
+        <div class="rvs-side raw">
+          <div class="rvs-side-label">Raw</div>
+          <div class="rvs-side-headline">All rows kept, including soft deletes</div>
+          <div class="rvs-example"><span class="label">recid:</span> 5637145332</div>
+          <div class="rvs-example"><span class="label">accountnum:</span> US-001</div>
+          <div class="rvs-example" style="color:var(--critical);"><span class="label">IsDelete:</span> 1</div>
+        </div>
+        <div class="rvs-arrow">→</div>
+        <div class="rvs-side silver">
+          <div class="rvs-side-label">Silver</div>
+          <div class="rvs-side-headline">Deleted row filtered out</div>
+          <p style="font-size:13px;color:var(--ink-3);font-style:italic;">Not present in Silver — <code>WHERE IsDelete = 0</code></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rvs-panel" data-panel="dupes">
+      <div class="rvs-compare">
+        <div class="rvs-side raw">
+          <div class="rvs-side-label">Raw</div>
+          <div class="rvs-side-headline">Multiple versions per recid</div>
+          <div class="rvs-example"><span class="label">recid:</span> 5637145078 <span class="label">ver:</span> 100</div>
+          <div class="rvs-example"><span class="label">recid:</span> 5637145078 <span class="label">ver:</span> 205</div>
+          <div class="rvs-example"><span class="label">recid:</span> 5637145078 <span class="label">ver:</span> 318</div>
+        </div>
+        <div class="rvs-arrow">→</div>
+        <div class="rvs-side silver">
+          <div class="rvs-side-label">Silver</div>
+          <div class="rvs-side-headline">Latest version only</div>
+          <div class="rvs-example"><span class="label">recid:</span> 5637145078 <span class="label">ver:</span> <strong style="color:var(--silver);">318</strong></div>
+          <p style="font-size:12px;color:var(--ink-3);margin-top:8px;">ROW_NUMBER() PARTITION BY recid ORDER BY versionnumber DESC = 1</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rvs-panel" data-panel="inherit">
+      <div class="rvs-compare">
+        <div class="rvs-side raw">
+          <div class="rvs-side-label">Raw</div>
+          <div class="rvs-side-headline">4 fragmented tables, same recid</div>
+          <div class="rvs-example"><span class="label">dirpartytable</span> — recid: 22565 · name: Contoso Ltd</div>
+          <div class="rvs-example"><span class="label">companyinfo</span> — dataarea: USMF · vatnum: 12-3456789</div>
+          <div class="rvs-example"><span class="label">dirperson</span> — firstname: NULL</div>
+          <div class="rvs-example"><span class="label">dirorganization</span> — orgnumber: ORG-0042</div>
+        </div>
+        <div class="rvs-arrow">→</div>
+        <div class="rvs-side silver">
+          <div class="rvs-side-label">Silver</div>
+          <div class="rvs-side-headline">One unified row</div>
+          <div class="rvs-example">recid: 22565</div>
+          <div class="rvs-example">name: Contoso Ltd</div>
+          <div class="rvs-example">dataarea: USMF</div>
+          <div class="rvs-example">vatnum: 12-3456789</div>
+          <div class="rvs-example">orgnumber: ORG-0042</div>
+          <div class="rvs-example">firstname: NULL</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rvs-panel" data-panel="enums">
+      <div class="rvs-compare">
+        <div class="rvs-side raw">
+          <div class="rvs-side-label">Raw</div>
+          <div class="rvs-side-headline">Integer only — meaningless without lookup</div>
+          <div class="rvs-example"><span class="label">custgroup:</span> 10</div>
+          <div class="rvs-example"><span class="label">blocked:</span> 2</div>
+          <div class="rvs-example"><span class="label">creditrating:</span> 1</div>
+        </div>
+        <div class="rvs-arrow">→</div>
+        <div class="rvs-side silver">
+          <div class="rvs-side-label">Silver</div>
+          <div class="rvs-side-headline">Integer + human-readable label</div>
+          <div class="rvs-example"><span class="label">custgroup:</span> 10</div>
+          <div class="rvs-example"><span class="label">blocked:</span> 2 · <strong style="color:var(--silver);">Invoice</strong></div>
+          <div class="rvs-example"><span class="label">creditrating:</span> 1 · <strong style="color:var(--silver);">Excellent</strong></div>
+          <p style="font-size:12px;color:var(--ink-3);margin-top:8px;">Resolved via srsanalysisenums join</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rvs-panel" data-panel="cols">
+      <div class="rvs-compare">
+        <div class="rvs-side raw">
+          <div class="rvs-side-label">Raw</div>
+          <div class="rvs-side-headline">Underscores &amp; infrastructure columns retained</div>
+          <div class="rvs-example">LEVEL_ · SIZE_ · KEY_ · COMMENT_</div>
+          <div class="rvs-example">Id · SinkCreatedOn · SinkModifiedOn</div>
+          <div class="rvs-example">_SysRowId · LSN · $FileName</div>
+        </div>
+        <div class="rvs-arrow">→</div>
+        <div class="rvs-side silver">
+          <div class="rvs-side-label">Silver</div>
+          <div class="rvs-side-headline">Cleaned business names</div>
+          <div class="rvs-example">level · size · key · comment</div>
+          <div class="rvs-example" style="color:var(--ink-3);"><span class="strike">Id, Sink*, _SysRowId, LSN, $FileName</span></div>
+          <p style="font-size:12px;color:var(--ink-3);margin-top:8px;">Underscores stripped from reserved words; infrastructure columns dropped</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rvs-panel" data-panel="types">
+      <div class="rvs-compare">
+        <div class="rvs-side raw">
+          <div class="rvs-side-label">Raw</div>
+          <div class="rvs-side-headline">Everything as strings</div>
+          <div class="rvs-example"><span class="label">createddatetime:</span> string "2024-06-15T14:30:00Z"</div>
+          <div class="rvs-example"><span class="label">creditmax:</span> string "50000.00"</div>
+          <div class="rvs-example"><span class="label">dataareaid:</span> "usmf"</div>
+        </div>
+        <div class="rvs-arrow">→</div>
+        <div class="rvs-side silver">
+          <div class="rvs-side-label">Silver</div>
+          <div class="rvs-side-headline">Proper Spark types</div>
+          <div class="rvs-example"><span class="label">createddatetime:</span> <strong style="color:var(--silver);">TimestampType</strong></div>
+          <div class="rvs-example"><span class="label">creditmax:</span> <strong style="color:var(--silver);">DecimalType(18,2)</strong></div>
+          <div class="rvs-example"><span class="label">dataareaid:</span> <strong style="color:var(--silver);">"USMF"</strong> (upper case)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rvs-panel" data-panel="dims">
+      <div class="rvs-compare">
+        <div class="rvs-side raw">
+          <div class="rvs-side-label">Raw</div>
+          <div class="rvs-side-headline">Normalised foreign key</div>
+          <div class="rvs-example"><span class="label">ledgerdimension:</span> 5637146289</div>
+          <p style="font-size:12px;color:var(--ink-3);margin-top:8px;">Needs 4 joins through Dim* tables to reach "CostCenter = CC100"</p>
+        </div>
+        <div class="rvs-arrow">→</div>
+        <div class="rvs-side silver">
+          <div class="rvs-side-label">Silver</div>
+          <div class="rvs-side-headline">Named columns per dimension</div>
+          <div class="rvs-example"><span class="label">main_account_id:</span> <strong style="color:var(--silver);">110110</strong></div>
+          <div class="rvs-example"><span class="label">cost_center:</span> <strong style="color:var(--silver);">CC100</strong></div>
+          <div class="rvs-example"><span class="label">department:</span> <strong style="color:var(--silver);">Sales</strong></div>
+          <div class="rvs-example"><span class="label">business_unit:</span> <strong style="color:var(--silver);">BU-002</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 9: GUIDANCE ============ -->
+<section class="section" id="guidance">
+  <div class="section-marker">
+    <div class="section-marker-inner">
+      <div class="section-num">§ 09</div>
+      <div class="section-kicker">Guidance</div>
+    </div>
+  </div>
+  <div>
+    <h2 class="section-title">Anti-patterns <em>we avoid.</em></h2>
+    <p class="section-lede">Five patterns that look tempting from a BYOD background but cause real problems in a lakehouse.</p>
+
+    <div class="traps">
+      <div class="trap">
+        <div class="trap-icon">✕</div>
+        <div class="trap-title">Recreating BYOD entities as Silver tables</div>
+        <div class="trap-why">Duplicates join logic. Party attributes end up in three Silver tables at once. Change once, break twice.</div>
+      </div>
+      <div class="trap">
+        <div class="trap-icon">✕</div>
+        <div class="trap-title">Scheduling the .ps1 scripts as a Databricks job</div>
+        <div class="trap-why">The scripts target Synapse or Fabric SQL. They don't write Delta. They don't run on Spark. Wrong tool for the job.</div>
+      </div>
+      <div class="trap">
+        <div class="trap-icon">✕</div>
+        <div class="trap-title">Skipping get_derivetables.sql at the start</div>
+        <div class="trap-why">Child tables silently missing from Synapse Link. Every downstream layer will have gaps you cannot see until a report user asks why a customer name is blank.</div>
+      </div>
+      <div class="trap">
+        <div class="trap-icon">✕</div>
+        <div class="trap-title">Filtering IsDelete in Raw</div>
+        <div class="trap-why">Destroys the audit trail. When a business-rule error is discovered later, reprocessing from history becomes impossible.</div>
+      </div>
+      <div class="trap">
+        <div class="trap-icon">✕</div>
+        <div class="trap-title">Connecting Power BI directly to Silver</div>
+        <div class="trap-why">Report authors will reproduce entity joins in DAX. Push those joins into Gold or OBT once — not into every report forever.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 10: TAKEAWAYS ============ -->
+<section class="section" id="close">
+  <div class="section-marker">
+    <div class="section-marker-inner">
+      <div class="section-num">§ 10</div>
+      <div class="section-kicker">Close</div>
+    </div>
+  </div>
+  <div>
+    <div class="takeaways">
+      <h2 class="takeaway-heading">Four things <em>to remember.</em></h2>
+      <div class="takeaway-list">
+        <div class="takeaway">
+          <div class="takeaway-num">01</div>
+          <div>
+            <div class="takeaway-headline">The scripts are Synapse Link tooling</div>
+            <div class="takeaway-detail">They exist to bridge BYOD to Synapse Link. None of them run in a lakehouse. Do not schedule them as Databricks jobs.</div>
+          </div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">02</div>
+          <div>
+            <div class="takeaway-headline">Their real value is as a blueprint</div>
+            <div class="takeaway-detail">get_derivetables.sql tells you which tables to add to Synapse Link. dependencies.json tells you which entity joins to reproduce in Spark.</div>
+          </div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">03</div>
+          <div>
+            <div class="takeaway-headline">Silver is not an entity</div>
+            <div class="takeaway-detail">Silver makes each D365 table whole again — that's Step 5 work. Gold joins many Silver tables into business shapes — that's Step 2 work. Confusing the two creates duplicated join logic and unmaintainable pipelines.</div>
+          </div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">04</div>
+          <div>
+            <div class="takeaway-headline">OBT is where Power BI plugs in</div>
+            <div class="takeaway-detail">Not Silver, not Gold. Pre-join at load time in a wide table; keep reports thin.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div>REF/D365-AN/1.0 · Data Architecture</div>
+  <div>Version 1.0 · Reference document</div>
+</footer>
+
+<script>
+  // Raw layer domain filter
+  const chips = document.querySelectorAll('.chip');
+  const panels = document.querySelectorAll('.raw-domain-panel');
+  chips.forEach(c => {
+    c.addEventListener('click', () => {
+      chips.forEach(x => { x.classList.remove('active'); x.setAttribute('aria-selected', 'false'); });
+      c.classList.add('active');
+      c.setAttribute('aria-selected', 'true');
+      const d = c.dataset.domain;
+      panels.forEach(p => {
+        p.style.display = (d === 'all' || p.dataset.domain === d) ? '' : 'none';
+      });
+    });
+  });
+
+  // Raw vs Silver tabs
+  const tabs = document.querySelectorAll('.rvs-tab');
+  const rvsPanels = document.querySelectorAll('.rvs-panel');
+  tabs.forEach(t => {
+    t.addEventListener('click', () => {
+      tabs.forEach(x => { x.classList.remove('active'); x.setAttribute('aria-selected', 'false'); });
+      t.classList.add('active');
+      t.setAttribute('aria-selected', 'true');
+      const p = t.dataset.tab;
+      rvsPanels.forEach(pnl => {
+        pnl.classList.toggle('active', pnl.dataset.panel === p);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
